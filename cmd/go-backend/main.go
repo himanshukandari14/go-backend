@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"log/slog"
 	"net/http"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/himanshukandari14/go-server/internal/config"
+	"github.com/himanshukandari14/go-server/internal/http/handlers/student"
 )
 
 
@@ -21,16 +21,15 @@ func main() {
 	//db setup
 	//setup router
 	router :=http.NewServeMux()
-	router.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("welcome here"))
-	})
+	router.HandleFunc("POST /api/students",student.New())
+	
 	//setup srver
 	server :=http.Server{
 		Addr: cfg.Addr,
 		Handler: router,
 	}
 
-	fmt.Printf("server started %&",cfg.HTTPServer.Addr)
+	slog.Info("Server started",slog.String("address",cfg.Addr))
 
 	done:=make(chan os.Signal, 1)
 
